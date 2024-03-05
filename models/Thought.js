@@ -38,6 +38,6 @@ thoughtSchema.path('createdAt').get(function (createdAt) {
     return createdAt.toLocaleString();
 });
 
-const Thought = model('Thought', thoughtSchema);
+const Thought = model('thought', thoughtSchema);
 
 module.exports = Thought;
