@@ -90,9 +90,23 @@ module.exports = {
 
     async deleteReaction(req, res) {
         try {
+            const thoughtId = req.params.thoughtId;
+            const reactionId = req.params.reactionId;
 
+            const thought = await Thought.findByIdAndUpdate(
+                thoughtId,
+                { $pull: { reactions: { _id: reactionId } } },
+                { new: true }
+            );
+
+            if (!thought) {
+                return res.status(404).json({ message: 'No thought with this ID' });
+            }
+
+            res.json(thought);
         } catch (err) {
-
+            console.error(error);
+            res.status(500).json({ message: 'Server Error' });
         }
     }
 };
