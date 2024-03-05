@@ -69,4 +69,47 @@ module.exports = {
       res.status(500).json(err);
     }
   },
+
+  async addFriend(req, res) {
+    try {
+      const friendId = req.params.friendId;
+      const userId = req.params.userId;
+      const user = await User.findByIdAndUpdate(
+        userId,
+        { $addToSet: { friends: friendId } },
+        { new: true }
+      );
+
+      if (!user) {
+        return res.status(404).json({ message: 'No user with that ID' });
+      }
+
+      res.json(user);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Server Error' });
+    }
+  },
+
+  async deleteFriend(req, res) {
+    try {
+      const friendId = req.params.friendId;
+      const userId = req.params.userId;
+
+      const user = await User.findByIdAndUpdate(
+        userId,
+        { $pull: { friends: friendId } },
+        { new: true }
+      );
+
+      if (!user) {
+        return res.status(404).json({ message: 'No user with that ID' });
+      }
+
+      res.json(user);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Server Error' });
+    }
+  }
 };
